@@ -1,11 +1,34 @@
 /* @flow */
+import {SyntheticDomRenderer} from './SyntheticDomRenderer';
 
-import MarkdownParser from './MarkdownParser';
 import {stateFromElement} from 'draft-js-import-element';
-
 import type {ContentState} from 'draft-js';
+import {ElementNode} from 'synthetic-dom';
+let marked = require('marked');
 
-export default function stateFromMarkdown(markdown: string): ContentState {
-  let element = MarkdownParser.parse(markdown, {getAST: true});
-  return stateFromElement(element);
+type StateFromMarkdownOpts = {marked: Object, sfe: Object};
+
+export default function stateFromMarkdown(markdown: string,
+                                          options?: StateFromMarkdownOpts): ContentState {
+  const parserDefaultOpts = {
+    gfm: true,
+    breaks: false,
+    pedantic: false,
+    smartLists: false,
+    silent: false,
+    tables: false, // not supported yet
+    renderer: new SyntheticDomRenderer({
+      langPrefix: 'lang-'},
+      { /* plugins */ }
+    ),
+    xhtml: false,
+  };
+  const parserOpts = Object.assign({}, parserDefaultOpts, (options)
+                                                          ? options.marked
+                                                          : {});
+  let fragment = marked.parse(markdown, parserOpts);
+  const sfeOpts = Object.assign({}, (options)
+                                    ? options.sfe
+                                    : {});
+  return stateFromElement(new ElementNode('body', [], [fragment]), sfeOpts);
 }
