@@ -1,6 +1,6 @@
 {
   "name": "draft-js-import-markdown",
-  "version": "0.2.1-gb.0",
+  "version": "0.2.1-gb.1",
   "description": "DraftJS: Import Markdown to ContentState",
   "main": "lib/main.js",
   "scripts": {

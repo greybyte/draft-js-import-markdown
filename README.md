@@ -32,8 +32,18 @@ It is possible to add custom configuration to the parser by setting options:
     }
     let contentState = stateFromMarkdown(markdown, opts);
 
-This project is still under development. If you want to help out, please open an issue to discuss or join us on [Slack](https://draftjs.slack.com/).
+Caveat: When a conversion involves DraftEntity (e.g. links), nasty scope issues
+can arise due to Draft storing entities in a global map (see [Draft Issue #185](https://github.com/facebook/draft-js/issues/185)).
 
+Usually this leads to "Invariant Violation: Unknown DraftEntity key" errors when
+the state returned from `stateFromMarkdown()` gets used in an actual editor.
+
+To work around this, an additional function `rawFromMarkdown()` is included,
+which returns raw state (including entities). `Draft.convertFromRaw()` can be
+used to convert the raw state back to a `ContentState`.
+
+This project is still under development. If you want to help out, please open
+an issue to discuss or join us on [Slack](https://draftjs.slack.com/).
 
 ## License
 

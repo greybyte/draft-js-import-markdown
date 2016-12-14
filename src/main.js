@@ -1,1 +1,1 @@
-export {default as stateFromMarkdown} from './stateFromMarkdown';
+export {stateFromMarkdown, rawFromMarkdown} from './stateFromMarkdown';
