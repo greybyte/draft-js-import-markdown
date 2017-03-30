@@ -18,10 +18,7 @@ export function stateFromMarkdown(markdown: string,
     smartLists: false,
     silent: false,
     tables: false, // not supported yet
-    renderer: new SyntheticDomRenderer({
-      langPrefix: 'lang-'},
-      { /* plugins */ }
-    ),
+    renderer: new SyntheticDomRenderer(),
     xhtml: false,
   };
   const parserOpts = Object.assign({}, parserDefaultOpts, (options)

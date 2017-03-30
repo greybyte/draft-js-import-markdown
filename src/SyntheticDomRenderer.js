@@ -7,9 +7,8 @@ import {
 
 
 export class SyntheticDomRenderer {
-  constructor(options, plugins) {
-    this.options = options;
-    this.plugins = plugins;
+  constructor(options) {
+    this.options = Object.assign({'lang-prefix': 'lang-'}, options);
   }
 
   code(childNode, lang) {
@@ -93,8 +92,16 @@ export class SyntheticDomRenderer {
   }
 
   plugin(plugin, params, block) {
-    if (this.plugins.hasOwnProperty(plugin)) {
-      return this.plugins[plugin](params, block);
+    // plugins are mapped to <figure>, which is somewhat semantically
+    // correct, at least in most cases
+    let attributes = [{name: 'type', value: plugin},
+                      {name: 'params', value: params}];
+    if (block) {
+      return new ElementNode('figure', attributes, [new TextNode(block)]);
+    } else {
+      // block is empty, include SOFT_BREAK_PLACEHOLDER so it does not
+      // get discarded
+      return new ElementNode('figure', attributes, [new TextNode('\u200B')]);
     }
   }
 
@@ -104,7 +111,7 @@ export class SyntheticDomRenderer {
 
   add(out, fragment) {
     if (typeof fragment === 'string') {
-      out.append(new TextNode(fragment));
+      out.appendChild(new TextNode(fragment));
     } else {
       out.appendChild(fragment);
     }
